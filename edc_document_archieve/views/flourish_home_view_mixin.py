@@ -1,11 +1,8 @@
 from django.apps import apps as django_apps
-from rest_framework.response import Response
-from rest_framework import viewsets
 
-import json
 from .flourish_caregiver_forms_view_mixin import FlourishCaregiverFormsViewMixin
 
-class FlourishHomeView(FlourishCaregiverFormsViewMixin,viewsets.ViewSet):
+class FlourishHomeViewMixin(FlourishCaregiverFormsViewMixin):
     
     odk_app = 'edc_odk'
     app_name = 'flourish_caregiver'
@@ -20,7 +17,8 @@ class FlourishHomeView(FlourishCaregiverFormsViewMixin,viewsets.ViewSet):
     def caregiver_consent_cls(self):
         return django_apps.get_model(self.caregiver_consent_model)
     
-    def pids(self, request):
+    @property
+    def pids(self):
         caregiver_pids = self.caregiver_consent_cls.objects.values_list(
                 'subject_identifier', flat=True).distinct()
                 
@@ -30,5 +28,5 @@ class FlourishHomeView(FlourishCaregiverFormsViewMixin,viewsets.ViewSet):
             'caregiver': caregiver_pids,
             'child': child_pids
             }
-        return Response(data)
+        return data
     

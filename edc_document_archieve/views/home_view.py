@@ -53,12 +53,13 @@ class HomeView(FlourishHomeViewMixin, APIView):
 
     def get(self, request):
         studies = {
-            'Tshilo Dikotla': {},
-            'Flourish': {
+
+            'flourish': {
                 'pids': self.pids,
                 'caregiver_forms': self.caregiver_forms,
                 'child_forms': self.child_forms
-            }
+            },
+            'tshilo-dikotla': {},
         }
 
         results = [

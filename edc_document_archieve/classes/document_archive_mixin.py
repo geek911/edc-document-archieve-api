@@ -33,7 +33,7 @@ class DocumentArchiveMixin:
         return django_apps.get_model(labresults_file_model)
 
     def clinician_notes_image_model(self, app_name=None):
-        return '%s.cliniciannotesimage' % app_name
+        return django_apps.get_model('%s.cliniciannotesimage' % app_name)
 
     def clinician_notes_model_cls(self, app_name=None):
         app_config = django_apps.get_app_config(

@@ -20,7 +20,7 @@ class FlourishCaregiverFormsViewMixin:
         models = [
             {
                 'app_label': 'flourish_caregiver',
-                'model_name': 'Caregiver Clinician Notes',
+                'model_name': 'Clinician Notes',
             }
         ]
         return models
@@ -38,7 +38,7 @@ class FlourishCaregiverFormsViewMixin:
         data = {
                 'crfs': [{
                     'app_label': 'flourish_child',
-                    'model_name': 'Child Clinician Notes'
+                    'model_name': 'Clinician Notes'
                 }],
                 'non_crfs': [{
                     'model_name': 'Consent Copies',

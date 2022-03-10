@@ -1,21 +1,27 @@
 import os
-import pytz
-import PIL
 
+import PIL
+import pytz
+from PIL import Image
 from django.db.utils import IntegrityError
 from django.apps import apps as django_apps
 from edc_appointment.constants import NEW_APPT
 from django.db.models import ManyToOneRel
 from .document_archive_mixin import DocumentArchiveMixin
 
-from PIL import Image
-
 
 class DocumentArchiveHelper(DocumentArchiveMixin):
-    def populate_model_objects(self, app_name, result, model_cls, img_cls, image_cls_field):
+    def populate_model_objects(self, result):
         updated = 0
         count = 0
+
         for data_dict in result:
+            model_name = data_dict['model_name'].replace('_', '')
+            app_name = data_dict['app_label']
+            img_cls = self.get_image_cls(model_name, app_name)
+            image_cls_field = data_dict['model_name']
+            model_cls = django_apps.get_model('%s.%s' % (app_name, model_name))
+
             if data_dict.get('visit_code'):
                 # Get visit
                 visit_obj = self.get_app_visit_model_obj(
@@ -90,7 +96,8 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
         return count, updated
 
     def get_app_visit_model_obj(
-            self, app_name, subject_identifier, visit_code, timepoint):
+            self, app_name, subject_identifier, visit_code, timepoint
+    ):
         visit_model_obj = None
         visit_models = self.get_visit_models().get(app_name)
 
@@ -141,7 +148,8 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
         return max(recent_captured) if recent_captured else False
 
     def create_image_obj_upload_image(
-            self, images_cls, field_name, obj, fields):
+            self, images_cls, field_name, obj, fields
+    ):
         image_names = [field for field in fields.keys() if 'image_name' in field]
         image_urls = [field for field in fields.keys() if 'image_url' in field]
 
@@ -238,4 +246,3 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
             return self.specimen_consent_image_model_cls
         elif model_name == 'caregivercliniciannotes' or model_name == 'childcliniciannotes':
             return self.clinician_notes_image_model(app_name)
-

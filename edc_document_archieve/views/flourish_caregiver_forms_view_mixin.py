@@ -37,12 +37,12 @@ class FlourishCaregiverFormsViewMixin:
     def child_forms(self):
         data = {
                 'crfs': [{
-                    'app_name': 'flourish_child',
+                    'app_label': 'flourish_child',
                     'model_name': 'Child Clinician Notes'
                 }],
                 'non_crfs': [{
                     'model_name': 'Consent Copies',
-                    'app_name': 'flourish_child',
+                    'app_label': 'flourish_child',
                 }]
             }
         return data

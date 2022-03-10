@@ -1,3 +1,3 @@
 from .custom_auth_token import CustomAuthToken
 from .home_view import HomeView
-from edc_document_archieve.views.flourish_home_view_mixin import FlourishHomeViewMixin
+from .flourish_home_view_mixin import FlourishHomeViewMixin

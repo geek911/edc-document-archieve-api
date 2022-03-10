@@ -1,0 +1,45 @@
+from django.apps import apps as django_apps
+
+
+class DocumentArchiveMixin:
+    @property
+    def consent_image_model_cls(self):
+        consent_image_model = 'edc_odk.consentimage'
+        return django_apps.get_model(consent_image_model)
+
+    @property
+    def specimen_consent_image_model_cls(self):
+        specimen_consent_image_model = 'edc_odk.specimenconsentimage'
+        return django_apps.get_model(specimen_consent_image_model)
+
+    @property
+    def national_id_image_model_cls(self):
+        nation_id_image_model = 'edc_odk.nationalidentityimage'
+        return django_apps.get_model(nation_id_image_model)
+
+    @property
+    def note_to_file_image_model_cls(self):
+        note_to_file_image_model = 'edc_odk.notetofiledocs'
+        return django_apps.get_model(note_to_file_image_model)
+
+    @property
+    def clinician_notes_archive_image_model_cls(self):
+        clinician_notes_archive_image_model = 'edc_odk.cliniciannotesimagearchive'
+        return django_apps.get_model(clinician_notes_archive_image_model)
+
+    @property
+    def lab_results_file_model_cls(self):
+        labresults_file_model = 'edc_odk.labresultsfile'
+        return django_apps.get_model(labresults_file_model)
+
+    def clinician_notes_image_model(self, app_name=None):
+        return '%s.cliniciannotesimage' % app_name
+
+    def clinician_notes_model_cls(self, app_name=None):
+        app_config = django_apps.get_app_config(
+            'edc_odk').clinician_notes_models
+        clinician_notes_model = app_config.get(app_name, 'default')
+
+        if clinician_notes_model:
+            return django_apps.get_model(
+                '%s.%s' % (app_name, clinician_notes_model))

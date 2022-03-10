@@ -9,13 +9,19 @@ class FlourishCaregiverFormsViewMixin:
         app_models = django_apps.get_app_config(self.odk_app).get_models()
         for model in app_models:
             if model._meta.verbose_name.istitle():
-                models.append(model._meta.verbose_name)
+                models.append({
+                    'app_label': model._meta.app_label,
+                    'model_name': model._meta.verbose_name
+                })
         return models
 
     @property
     def caregiver_crfs(self):
         models = [
-            'Caregiver Clinician Notes',
+            {
+                'app_label': 'flourish_caregiver',
+                'model_name': 'Caregiver Clinician Notes',
+            }
         ]
         return models
 
@@ -30,8 +36,14 @@ class FlourishCaregiverFormsViewMixin:
     @property
     def child_forms(self):
         data = {
-                'crfs': ['Child Clinician Notes'],
-                'non_crfs': ['Consent Copies']
+                'crfs': [{
+                    'app_name': 'flourish_child',
+                    'model_name': 'Child Clinician Notes'
+                }],
+                'non_crfs': [{
+                    'model_name': 'Consent Copies',
+                    'app_name': 'flourish_child',
+                }]
             }
         return data
 

@@ -16,7 +16,7 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
         updated = 0
         count = 0
         for data_dict in result:
-            if data_dict['visit_code']:
+            if data_dict.get('visit_code'):
                 # Get visit
                 visit_obj = self.get_app_visit_model_obj(
                     app_name,
@@ -50,6 +50,43 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
                                 updated += 1
                     except IntegrityError as e:
                         raise Exception(e)
+
+            elif data_dict.get('subject_identifier'):
+                try:
+                    if data_dict.get('consent_version'):
+                        obj, created = model_cls.objects.get_or_create(
+                            subject_identifier=data_dict.get('subject_identifier'),
+                            version=data_dict.get('consent_version'))
+                    else:
+                        obj, created = model_cls.objects.get_or_create(
+                            subject_identifier=data_dict.get('subject_identifier'))
+                    if created:
+                        self.create_image_obj_upload_image(
+                            img_cls,
+                            image_cls_field,
+                            obj,
+                            data_dict)
+                        count += 1
+                    else:
+                        imgs_updated = self.update_existing_image_objs(
+                            img_cls,
+                            image_cls_field,
+                            obj,
+                            data_dict)
+                        if imgs_updated:
+                            updated += 1
+
+                except IntegrityError as e:
+                    raise Exception(e)
+            else:
+                obj, created = model_cls.objects.get_or_create(
+                    identifier=data_dict.get('identifier'))
+                if created:
+                    self.create_image_obj_upload_image(
+                        img_cls,
+                        image_cls_field,
+                        obj,
+                        data_dict)
         return count, updated
 
     def get_app_visit_model_obj(
@@ -80,7 +117,6 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
         existing_datetime = self.recent_image_obj_datetime(
             images_cls, field_name, obj, fields)
         if existing_datetime:
-            print(existing_datetime)
             if fields.get('date_captured') > existing_datetime:
                 self.create_image_obj_upload_image(images_cls, field_name, obj, fields)
                 print(fields.get('date_captured'))
@@ -188,3 +224,18 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
         with open('%(path)s%(filename)s' % {'path': image_path, 'filename': filename}, 'wb') as f:
             f.write(file.read())
         return True
+
+    def get_image_cls(self, model_name, app_name):
+        if model_name == 'consentcopies':
+            return self.consent_image_model_cls
+        elif model_name == 'omangcopies':
+            return self.national_id_image_model_cls
+        elif model_name == 'specimenconsentcopies':
+            return self.specimen_consent_image_model_cls
+        elif model_name == 'cliniciannotesarchives':
+            return self.specimen_consent_image_model_cls
+        elif model_name == 'labresultsfile':
+            return self.specimen_consent_image_model_cls
+        elif model_name == 'caregivercliniciannotes' or model_name == 'childcliniciannotes':
+            return self.clinician_notes_image_model(app_name)
+

@@ -1,10 +1,10 @@
 from django.apps import apps as django_apps
 
 
-class FlourishCaregiverFormsViewMixin:
+class TshiloDikotlaForms:
 
     @property
-    def caregiver_non_crfs(self):
+    def maternal_non_crfs(self):
         models = []
         app_models = django_apps.get_app_config(self.odk_app).get_models()
         for model in app_models:
@@ -16,36 +16,34 @@ class FlourishCaregiverFormsViewMixin:
         return models
 
     @property
-    def caregiver_crfs(self):
+    def maternal_crfs(self):
         models = [
             {
-                'app_label': 'flourish_caregiver',
-                'model_name': 'Clinician Notes',
+                'app_label': 'td_maternal',
+                'model_name': 'Maternal Clinician Notes',
+            },
+            {
+                'app_label': 'td_maternal',
+                'model_name': 'Lab Results',
             }
         ]
         return models
 
     @property
-    def caregiver_forms(self):
+    def maternal_forms(self):
         data = {
-            'crfs': self.caregiver_crfs,
-            'non_crfs': self.caregiver_non_crfs
+            'crfs': self.maternal_crfs,
+            'non_crfs': self.maternal_non_crfs
             }
         return data
 
     @property
-    def child_forms(self):
+    def infant_forms(self):
         data = {
                 'crfs': [{
-                    'app_label': 'flourish_child',
+                    'app_label': 'td_infant',
                     'model_name': 'Clinician Notes'
                 }],
-                'non_crfs': [{
-                    'model_name': 'Consent Copies',
-                    'app_label': 'flourish_child',
-                }]
+                'non_crfs': []
             }
         return data
-
-    def create_non_crf_from(self):
-        pass

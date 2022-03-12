@@ -1,8 +1,6 @@
 import os
 
-import PIL
 import pytz
-from PIL import Image
 from django.db.utils import IntegrityError
 from django.apps import apps as django_apps
 from edc_appointment.constants import NEW_APPT
@@ -21,7 +19,7 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
         img_cls = self.get_image_cls(model_name, app_name)
         image_cls_field = data_dict['model_name']
         model_cls = django_apps.get_model('%s.%s' % (app_name, model_name))
-
+        # consent_version = self.consent_version(data_dict.get('subject_identifier'))
         if data_dict.get('visit_code'):
             # Get visit
             visit_obj = self.get_app_visit_model_obj(
@@ -37,6 +35,7 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
                 try:
                     obj, created = model_cls.objects.get_or_create(
                         report_datetime__gte=visit_obj.report_datetime,
+                        consent_version=data_dict['consent_version'],
                         **{f'{field_name}': visit_obj}, )
                     if created:
                         self.create_image_obj_upload_image(
@@ -156,7 +155,7 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
 
     def create_image_obj_upload_image(
             self, images_cls, field_name, obj, fields, files):
-        print(len(files))
+        
         for file in files:
             upload_to = images_cls.image.field.upload_to
             # Check if path is func or string
@@ -169,44 +168,13 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
                 local_timezone = pytz.timezone('Africa/Gaborone')
                 datetime_captured.astimezone(local_timezone)
                 # create image model object
+                if field_name == 'specimen_consent_copies':
+                    field_name = 'consent_copies'
                 images_cls.objects.create(
                     **{f'{field_name}': obj},
                     image=upload_to + file.name,
                     user_uploaded=fields.get('username'),
                     datetime_captured=datetime_captured)
-        return None
-        
-
-    def add_image_stamp(self, image_path=None, position=(25, 25), resize=(600, 600)):
-        """
-        Superimpose image of a stamp over copy of the base image
-        @param image_path: dir to base image
-        @param position: pixels(w,h) to superimpose stamp at
-        """
-        base_image = Image.open(image_path)
-        stamp = Image.open('media/stamp/true-copy.png')
-        import pdb;
-        pdb.set_trace()
-        if resize:
-            stamp = stamp.resize(resize, PIL.Image.ANTIALIAS)
-
-        width, height = base_image.size
-        stamp_width, stamp_height = stamp.size
-
-        # Determine orientation of the base image before pasting stamp
-        if width < height:
-            pos_width = round(width / 2) - round(stamp_width / 2)
-            pos_height = height - stamp_height
-            position = (pos_width, pos_height)
-        elif width > height:
-            stamp = stamp.rotate(90)
-            pos_width = width - stamp_width
-            pos_height = round(height / 2) - round(stamp_height / 2)
-            position = (pos_width, pos_height)
-
-        # paste stamp over image
-        base_image.paste(stamp, position, mask=stamp)
-        base_image.save(image_path)
 
     def image_file_upload(self, file, filename, upload_to):
         image_path = 'media/%(upload_dir)s' % {'upload_dir': upload_to}
@@ -229,3 +197,6 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
             return self.specimen_consent_image_model_cls
         elif model_name == 'cliniciannotes':
             return self.clinician_notes_image_model(app_name)
+
+    def consent_version(self, subjectIdentifier):
+        pass

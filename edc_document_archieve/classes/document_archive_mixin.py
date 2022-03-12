@@ -43,3 +43,13 @@ class DocumentArchiveMixin:
         if clinician_notes_model:
             return django_apps.get_model(
                 '%s.%s' % (app_name, clinician_notes_model))
+
+    @property
+    def td_consent_version_cls(self):
+        td_consent_version_model = 'td_maternal.tdconsentversion'
+        return django_apps.get_model(td_consent_version_model)
+
+    @property
+    def flourish_consent_version_cls(self):
+        flourish_consent_version_model = 'flourish_caregiver.flourishconsentversion'
+        return django_apps.get_model(flourish_consent_version_model)

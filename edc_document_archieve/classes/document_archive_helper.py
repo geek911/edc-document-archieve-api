@@ -193,7 +193,7 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
             return self.specimen_consent_image_model_cls
         elif model_name == 'cliniciannotesarchives':
             return self.clinician_notes_archive_image_model_cls
-        elif model_name == 'labresultsfile':
+        elif model_name == 'labresultsfiles':
             return self.lab_results_file_model_cls
         elif model_name == 'cliniciannotes':
             return self.clinician_notes_image_model(app_name)

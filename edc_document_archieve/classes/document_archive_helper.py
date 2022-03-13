@@ -197,6 +197,8 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
             return self.lab_results_file_model_cls
         elif model_name == 'cliniciannotes':
             return self.clinician_notes_image_model(app_name)
+        elif model_name == 'notetofile':
+            return self.note_to_file_image_model_cls(app_name)
 
     def consent_version(self, subjectIdentifier):
         pass

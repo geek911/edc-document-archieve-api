@@ -170,6 +170,11 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
                 # create image model object
                 if field_name == 'specimen_consent_copies':
                     field_name = 'consent_copies'
+                if field_name == 'lab_results_files':
+                    field_name = 'lab_results'
+                if field_name == 'clinician_notes_archives':
+                    field_name = 'clinician_notes'
+
                 images_cls.objects.create(
                     **{f'{field_name}': obj},
                     image=upload_to + f'{file.name}.jpeg',

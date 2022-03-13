@@ -174,6 +174,8 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
                     field_name = 'lab_results'
                 if field_name == 'clinician_notes_archives':
                     field_name = 'clinician_notes'
+                if field_name == 'note_to_file':
+                    field_name = 'notes_to_file'
 
                 images_cls.objects.create(
                     **{f'{field_name}': obj},
@@ -203,7 +205,7 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
         elif model_name == 'cliniciannotes':
             return self.clinician_notes_image_model(app_name)
         elif model_name == 'notetofile':
-            return self.note_to_file_image_model_cls(app_name)
+            return self.note_to_file_image_model_cls
 
     def consent_version(self, subjectIdentifier):
         pass

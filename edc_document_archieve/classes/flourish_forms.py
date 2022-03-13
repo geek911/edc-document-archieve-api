@@ -15,7 +15,7 @@ class FlourishForms:
                 'app_label': model._meta.app_label,
                 'model_name': model._meta.verbose_name
             })
-        if model._meta.verbose_name.contains('Note to file'):
+        if model._meta.verbose_name == 'Note to file':
             models.append({
                     'app_label': model._meta.app_label,
                     'model_name': model._meta.verbose_name

@@ -35,7 +35,7 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
                 try:
                     obj, created = model_cls.objects.get_or_create(
                         report_datetime__gte=visit_obj.report_datetime,
-                        consent_version=data_dict['consent_version'],
+                        consent_version=data_dict.get('consent_version'),
                         **{f'{field_name}': visit_obj}, )
                     if created:
                         self.create_image_obj_upload_image(
@@ -62,7 +62,7 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
                 if data_dict.get('consent_version'):
                     obj, created = model_cls.objects.get_or_create(
                         subject_identifier=data_dict.get('subject_identifier'),
-                        version=data_dict.get('consent_version'))
+                        consent_version=data_dict.get('consent_version'))
                 else:
                     obj, created = model_cls.objects.get_or_create(
                         subject_identifier=data_dict.get('subject_identifier'))
@@ -172,7 +172,7 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
                     field_name = 'consent_copies'
                 images_cls.objects.create(
                     **{f'{field_name}': obj},
-                    image=upload_to + file.name,
+                    image=upload_to + f'{file.name}.jpeg',
                     user_uploaded=fields.get('username'),
                     datetime_captured=datetime_captured)
 
@@ -180,7 +180,7 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
         image_path = 'media/%(upload_dir)s' % {'upload_dir': upload_to}
         if not os.path.exists(image_path):
             os.makedirs(image_path)
-        with open('%(path)s%(filename)s' % {'path': image_path, 'filename': filename}, 'wb') as f:
+        with open('%(path)s%(filename)s' % {'path': image_path, 'filename': f'{filename}.jpeg'}, 'wb') as f:
             f.write(file.read())
         return True
 

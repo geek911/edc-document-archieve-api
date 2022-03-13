@@ -20,12 +20,8 @@ class TshiloDikotlaForms:
         models = [
             {
                 'app_label': 'td_maternal',
-                'model_name': 'Maternal Clinician Notes',
+                'model_name': 'Clinician Notes',
             },
-            {
-                'app_label': 'td_maternal',
-                'model_name': 'Lab Results',
-            }
         ]
         return models
 

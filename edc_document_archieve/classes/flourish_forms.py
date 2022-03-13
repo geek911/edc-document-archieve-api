@@ -10,15 +10,16 @@ class FlourishForms:
         app_models = django_apps.get_app_config(self.odk_app).get_models()
         for model in app_models:
             if model._meta.verbose_name.istitle():
-                models.append({
+                pass
+            models.append({
+                'app_label': model._meta.app_label,
+                'model_name': model._meta.verbose_name
+            })
+        if model._meta.verbose_name.contains('Note to file'):
+            models.append({
                     'app_label': model._meta.app_label,
                     'model_name': model._meta.verbose_name
-                })
-        # if model._meta.verbose_name.contains('Note to file'):
-        #     models.append({
-        #             'app_label': model._meta.app_label,
-        #             'model_name': model._meta.verbose_name
-        #     })
+            })
         return models
 
     @property

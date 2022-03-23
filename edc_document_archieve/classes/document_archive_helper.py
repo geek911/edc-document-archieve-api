@@ -19,7 +19,6 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
         img_cls = self.get_image_cls(model_name, app_name)
         image_cls_field = data_dict['model_name']
         model_cls = django_apps.get_model('%s.%s' % (app_name, model_name))
-        # consent_version = self.consent_version(data_dict.get('subject_identifier'))
         if data_dict.get('visit_code'):
             # Get visit
             visit_obj = self.get_app_visit_model_obj(
@@ -27,16 +26,22 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
                 data_dict['subject_identifier'],
                 data_dict['visit_code'],
                 data_dict['timepoint'])
+            print(visit_obj)
             visit_models = self.get_visit_models().get(app_name)
             field_name = None
             if visit_models:
                 field_name = visit_models[0]
             if visit_obj:
+                consent_version = self.consent_version(
+                    app_name=app_name,
+                    consent_model='subjectconsent',
+                    subject_identifier=data_dict.get('subject_identifier'))
                 try:
                     obj, created = model_cls.objects.get_or_create(
                         report_datetime__gte=visit_obj.report_datetime,
-                        consent_version=data_dict.get('consent_version'),
-                        **{f'{field_name}': visit_obj}, )
+                        consent_version=consent_version,
+                        **{f'{field_name}': visit_obj},)
+                    print(obj)
                     if created:
                         self.create_image_obj_upload_image(
                             img_cls,
@@ -62,7 +67,7 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
                 if data_dict.get('consent_version'):
                     obj, created = model_cls.objects.get_or_create(
                         subject_identifier=data_dict.get('subject_identifier'),
-                        consent_version=data_dict.get('consent_version'))
+                        version=data_dict.get('consent_version'))
                 else:
                     obj, created = model_cls.objects.get_or_create(
                         subject_identifier=data_dict.get('subject_identifier'))
@@ -86,16 +91,6 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
 
             except IntegrityError as e:
                 raise Exception(e)
-        else:
-            obj, created = model_cls.objects.get_or_create(
-                identifier=data_dict.get('identifier'))
-            if created:
-                self.create_image_obj_upload_image(
-                    img_cls,
-                    image_cls_field,
-                    obj,
-                    data_dict,
-                    files)
         return count, updated
 
     def get_app_visit_model_obj(
@@ -207,5 +202,15 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
         elif model_name == 'notetofile':
             return self.note_to_file_image_model_cls
 
-    def consent_version(self, subjectIdentifier):
-        pass
+    def consent_version(self, app_name, consent_model, subject_identifier):
+        consent_model_cls = django_apps.get_model(
+                '%s.%s' % (app_name, consent_model))
+        version = '1'
+        try:
+            consent = consent_model_cls.objects.filter(
+                subject_identifier=subject_identifier).latest('created')
+        except consent_model_cls.DoesNotExist:
+            pass
+        else:
+            version = consent.version
+        return version

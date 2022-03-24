@@ -32,10 +32,17 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
             if visit_models:
                 field_name = visit_models[0]
             if visit_obj:
-                consent_version = self.consent_version(
-                    app_name=app_name,
-                    consent_model='subjectconsent',
-                    subject_identifier=data_dict.get('subject_identifier'))
+                if data_dict.get('subject_identifier').endswith('-10'):
+                    consent_model = 'infantdummysubjectconsent' if app_name == 'td_infant' else 'childdummysubjectconsent'
+                    consent_version = self.consent_version(
+                        app_name=app_name,
+                        consent_model=consent_model,
+                        subject_identifier=data_dict.get('subject_identifier'))
+                else:
+                    consent_version = self.consent_version(
+                        app_name=app_name,
+                        consent_model='subjectconsent',
+                        subject_identifier=data_dict.get('subject_identifier'))
                 try:
                     obj, created = model_cls.objects.get_or_create(
                         report_datetime__gte=visit_obj.report_datetime,
@@ -100,8 +107,7 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
         visit_models = self.get_visit_models().get(app_name)
 
         if visit_models:
-            visit_model_cls = django_apps.get_model(
-                visit_models[1])
+            visit_model_cls = django_apps.get_model(visit_models[1])
 
             visit_model_obj = visit_model_cls.objects.filter(
                 subject_identifier=subject_identifier,
@@ -171,6 +177,8 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
                     field_name = 'clinician_notes'
                 if field_name == 'note_to_file':
                     field_name = 'notes_to_file'
+                if field_name == 'infant_clinician_notes':
+                    field_name = 'clinician_notes'
 
                 images_cls.objects.create(
                     **{f'{field_name}': obj},
@@ -201,6 +209,8 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
             return self.clinician_notes_image_model(app_name)
         elif model_name == 'notetofile':
             return self.note_to_file_image_model_cls
+        elif model_name == 'infantcliniciannotes':
+            return self.infant_clinician_notes_image_model_cls
 
     def consent_version(self, app_name, consent_model, subject_identifier):
         consent_model_cls = django_apps.get_model(

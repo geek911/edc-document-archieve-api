@@ -4,7 +4,7 @@ from django.apps import apps as django_apps
 class TshiloDikotlaForms:
 
     @property
-    def maternal_non_crfs(self):
+    def non_crfs(self):
         models = []
         app_models = django_apps.get_app_config(self.odk_app).get_models()
         for model in app_models:
@@ -34,7 +34,7 @@ class TshiloDikotlaForms:
     def maternal_forms(self):
         data = {
             'crfs': self.maternal_crfs,
-            'non_crfs': self.maternal_non_crfs
+            'non_crfs': self.non_crfs
             }
         return data
 
@@ -43,8 +43,8 @@ class TshiloDikotlaForms:
         data = {
                 'crfs': [{
                     'app_label': 'td_infant',
-                    'model_name': 'Clinician Notes'
+                    'model_name': 'Infant Clinician Notes'
                 }],
-                'non_crfs': []
+                'non_crfs': self.non_crfs
             }
         return data

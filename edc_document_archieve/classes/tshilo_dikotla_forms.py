@@ -6,9 +6,15 @@ class TshiloDikotlaForms:
     @property
     def non_crfs(self):
         models = []
+        excluded_apps = [
+            'Assent',
+            'Adult Main Consent',
+            'Continued Participation',
+            'Parental Consent',
+        ]
         app_models = django_apps.get_app_config(self.odk_app).get_models()
-        for model in app_models:
-            if model._meta.verbose_name.istitle():
+        for model in app_models :
+            if model._meta.verbose_name.istitle() and model.verbose_name not in excluded_apps:
                 models.append({
                     'app_label': model._meta.app_label,
                     'model_name': model._meta.verbose_name

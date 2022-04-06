@@ -7,9 +7,13 @@ class FlourishForms:
     @property
     def caregiver_non_crfs(self):
         models = []
+        excluded_apps = [
+            'Assent',
+            'Continued Participation',
+        ]
         app_models = django_apps.get_app_config(self.odk_app).get_models()
         for model in app_models:
-            if model._meta.verbose_name.istitle():
+            if model._meta.verbose_name.istitle() and model._meta.verbose_name not in excluded_apps:
                 models.append({
                     'app_label': model._meta.app_label,
                     'model_name': model._meta.verbose_name
@@ -49,7 +53,16 @@ class FlourishForms:
                 'non_crfs': [{
                     'model_name': 'Consent Copies',
                     'app_label': 'flourish_child',
-                }]
+                },
+                {
+                    'model_name': 'Assent',
+                    'app_label': 'edc_odk',
+                },
+                {
+                    'model_name': 'Continued Participation',
+                    'app_label': 'edc_odk',
+                }
+                ]
             }
         return data
 

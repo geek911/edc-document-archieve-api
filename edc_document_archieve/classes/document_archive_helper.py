@@ -211,6 +211,14 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
             return self.note_to_file_image_model_cls
         elif model_name == 'infantcliniciannotes':
             return self.infant_clinician_notes_image_model_cls
+        elif model_name == 'assent':
+            return self.assent_image_model_cls
+        elif model_name == 'adultmainconsent':
+            return self.adult_main_consent_image_model_cls
+        elif model_name == 'continuedparticipation':
+            return self.continued_participation_image_model_cls
+        elif model_name == 'parentalconsent':
+            return self.parental_consent_image_model_cls
 
     def consent_version(self, app_name, consent_model, subject_identifier):
         consent_model_cls = django_apps.get_model(

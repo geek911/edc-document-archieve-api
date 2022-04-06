@@ -58,3 +58,23 @@ class DocumentArchiveMixin:
     def infant_clinician_notes_image_model_cls(self):
         clinician_notes_image_model = 'td_infant.cliniciannotesimage'
         return django_apps.get_model(clinician_notes_image_model)
+
+    @property
+    def assent_image_model_cls(self):
+        assent_image_model = 'edc_odk.assentimage'
+        return django_apps.get_model(assent_image_model)
+
+    @property
+    def adult_main_consent_image_model_cls(self):
+        adult_main_consent_image_model = 'edc_odk.adultmainconsentimage'
+        return django_apps.get_model(adult_main_consent_image_model)
+
+    @property
+    def continued_participation_image_model_cls(self):
+        continued_consent_image_model = 'edc_odk.continuedparticipationimage'
+        return django_apps.get_model(continued_consent_image_model)
+
+    @property
+    def parental_consent_image_model_cls(self):
+        parental_consent_image_model = 'edc_odk.parentalconsentimage'
+        return django_apps.get_model(parental_consent_image_model)

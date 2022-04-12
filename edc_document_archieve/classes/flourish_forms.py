@@ -10,6 +10,10 @@ class FlourishForms:
         excluded_apps = [
             'Assent',
             'Continued Participation',
+            'Consent Copies',
+            'Birth Certificate',
+            'Specimen Consent Copies',
+
         ]
         app_models = django_apps.get_app_config(self.odk_app).get_models()
         for model in app_models:
@@ -51,17 +55,21 @@ class FlourishForms:
                     'model_name': 'Clinician Notes'
                 }],
                 'non_crfs': [{
-                    'model_name': 'Consent Copies',
-                    'app_label': 'flourish_child',
-                },
-                {
                     'model_name': 'Assent',
                     'app_label': 'edc_odk',
                 },
                 {
                     'model_name': 'Continued Participation',
                     'app_label': 'edc_odk',
-                }
+                },
+                {
+                    'model_name': 'Omang Copies',
+                    'app_label': 'edc_odk',
+                },
+                 {
+                    'model_name': 'Birth Certificate',
+                    'app_label': 'edc_odk',
+                },
                 ]
             }
         return data

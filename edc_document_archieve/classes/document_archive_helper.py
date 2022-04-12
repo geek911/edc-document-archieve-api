@@ -15,6 +15,9 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
         updated = 0
         count = 0
         model_name = data_dict['model_name'].replace('_', '')
+        if model_name == 'parentalconsentforchild':
+            model_name = 'parentalconsent'
+
         app_name = data_dict['app_label']
         img_cls = self.get_image_cls(model_name, app_name)
         image_cls_field = data_dict['model_name']
@@ -219,6 +222,8 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
             return self.continued_participation_image_model_cls
         elif model_name == 'parentalconsent':
             return self.parental_consent_image_model_cls
+        elif model_name == 'birthcertificate':
+            return self.birth_certificate_image_model_cls
 
     def consent_version(self, app_name, consent_model, subject_identifier):
         consent_model_cls = django_apps.get_model(

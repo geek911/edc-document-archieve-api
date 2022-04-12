@@ -78,3 +78,8 @@ class DocumentArchiveMixin:
     def parental_consent_image_model_cls(self):
         parental_consent_image_model = 'edc_odk.parentalconsentimage'
         return django_apps.get_model(parental_consent_image_model)
+
+    @property
+    def birth_certificate_image_model_cls(self):
+        birth_certificate_image_model = 'edc_odk.birthcertificateimage'
+        return django_apps.get_model(birth_certificate_image_model)

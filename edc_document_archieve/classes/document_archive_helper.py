@@ -182,6 +182,8 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
                     field_name = 'notes_to_file'
                 if field_name == 'infant_clinician_notes':
                     field_name = 'clinician_notes'
+                if field_name == 'parental_consent_for_child':
+                    field_name = 'parental_consent'
 
                 images_cls.objects.create(
                     **{f'{field_name}': obj},

@@ -71,7 +71,7 @@ class FlourishForms:
                     'app_label': 'edc_odk',
                 },
                     {
-                    'model_name': 'Notes to file',
+                    'model_name': 'Note to file',
                     'app_label': 'edc_odk',
                 },
                     {

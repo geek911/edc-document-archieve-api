@@ -58,16 +58,24 @@ class FlourishForms:
                     'model_name': 'Assent',
                     'app_label': 'edc_odk',
                 },
-                {
+                    {
                     'model_name': 'Continued Participation',
                     'app_label': 'edc_odk',
                 },
-                {
+                    {
                     'model_name': 'Omang Copies',
                     'app_label': 'edc_odk',
                 },
-                 {
+                    {
                     'model_name': 'Birth Certificate',
+                    'app_label': 'edc_odk',
+                },
+                    {
+                    'model_name': 'Note to file',
+                    'app_label': 'edc_odk',
+                },
+                    {
+                    'model_name': 'Lab Results Files',
                     'app_label': 'edc_odk',
                 },
                 ]

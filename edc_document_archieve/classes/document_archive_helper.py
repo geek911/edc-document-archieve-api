@@ -48,10 +48,9 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
                         subject_identifier=data_dict.get('subject_identifier'))
                 try:
                     obj, created = model_cls.objects.get_or_create(
-                        report_datetime=visit_obj.report_datetime,
+                        report_datetime__gte=visit_obj.report_datetime,
                         consent_version=consent_version,
                         **{f'{field_name}': visit_obj},)
-                    print(obj)
                     if created:
                         self.create_image_obj_upload_image(
                             img_cls,

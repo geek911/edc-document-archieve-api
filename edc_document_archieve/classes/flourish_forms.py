@@ -13,7 +13,7 @@ class FlourishForms:
             'Consent Copies',
             'Birth Certificate',
             'Specimen Consent Copies',
-
+            'Clinician Notes Archives',
         ]
         app_models = django_apps.get_app_config(self.odk_app).get_models()
         for model in app_models:

@@ -225,6 +225,8 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
             return self.parental_consent_image_model_cls
         elif model_name == 'birthcertificate':
             return self.birth_certificate_image_model_cls
+        elif model_name == 'childcliniciannotes':
+            return self.child_clinician_notes_image_model(app_name)
 
     def consent_version(self, app_name, consent_model, subject_identifier):
         consent_model_cls = django_apps.get_model(

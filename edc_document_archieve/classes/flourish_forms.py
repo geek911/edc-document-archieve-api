@@ -52,7 +52,7 @@ class FlourishForms:
         data = {
                 'crfs': [{
                     'app_label': 'flourish_child',
-                    'model_name': 'Clinician Notes'
+                    'model_name': 'Child Clinician Notes'
                 }],
                 'non_crfs': [{
                     'model_name': 'Assent',

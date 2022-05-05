@@ -13,7 +13,7 @@ class TshiloDikotlaForms:
             'Parental Consent',
         ]
         app_models = django_apps.get_app_config(self.odk_app).get_models()
-        for model in app_models :
+        for model in app_models:
             if model._meta.verbose_name.istitle() and model.verbose_name not in excluded_apps:
                 models.append({
                     'app_label': model._meta.app_label,

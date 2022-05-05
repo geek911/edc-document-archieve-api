@@ -56,7 +56,7 @@ class DocumentArchiveMixin:
     def flourish_consent_version_cls(self):
         flourish_consent_version_model = 'flourish_caregiver.flourishconsentversion'
         return django_apps.get_model(flourish_consent_version_model)
-    
+
     @property
     def infant_clinician_notes_image_model_cls(self):
         clinician_notes_image_model = 'td_infant.cliniciannotesimage'

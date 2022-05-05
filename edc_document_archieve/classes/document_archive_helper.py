@@ -8,6 +8,8 @@ from django.db.models import ManyToOneRel
 from .document_archive_mixin import DocumentArchiveMixin
 from django.utils.timezone import make_aware
 from dateutil.parser import parse
+import PIL
+from PIL import Image
 
 
 class DocumentArchiveHelper(DocumentArchiveMixin):
@@ -158,7 +160,6 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
 
     def create_image_obj_upload_image(
             self, images_cls, field_name, obj, fields, files):
-        
         for file in files:
             upload_to = images_cls.image.field.upload_to
             # Check if path is func or string
@@ -196,6 +197,10 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
             os.makedirs(image_path)
         with open('%(path)s%(filename)s' % {'path': image_path, 'filename': f'{filename}.jpeg'}, 'wb') as f:
             f.write(file.read())
+        path = 'media/%(upload_dir)s%(filename)s' % {
+                    'filename': f'{filename}.jpeg',
+                    'upload_dir': upload_to}
+        self.add_image_stamp(path)
         return True
 
     def get_image_cls(self, model_name, app_name):
@@ -240,3 +245,32 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
         else:
             version = consent.version
         return version
+
+    def add_image_stamp(self, image_path=None, position=(25, 25), resize=(600, 600)):
+        """
+        Superimpose image of a stamp over copy of the base image
+        @param image_path: dir to base image
+        @param position: pixels(w,h) to superimpose stamp at
+        """
+        base_image = Image.open(image_path)
+        stamp = Image.open('media/stamp/true-copy.png')
+        if resize:
+            stamp = stamp.resize(resize, PIL.Image.ANTIALIAS)
+
+        width, height = base_image.size
+        stamp_width, stamp_height = stamp.size
+
+        # Determine orientation of the base image before pasting stamp
+        if width < height:
+            pos_width = round(width/2)-round(stamp_width/2)
+            pos_height = height-stamp_height
+            position = (pos_width, pos_height)
+        elif width > height:
+            stamp = stamp.rotate(90)
+            pos_width = width-stamp_width
+            pos_height = round(height/2)-round(stamp_height/2)
+            position = (pos_width, pos_height)
+
+        # paste stamp over image
+        base_image.paste(stamp, position, mask=stamp)
+        base_image.save(image_path)

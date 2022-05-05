@@ -179,7 +179,7 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
                     field_name = 'clinician_notes'
                 if field_name == 'note_to_file':
                     field_name = 'notes_to_file'
-                if field_name == 'infant_clinician_notes':
+                if field_name == 'child_clinician_notes':
                     field_name = 'clinician_notes'
                 if field_name == 'parental_consent_for_child':
                     field_name = 'parental_consent'

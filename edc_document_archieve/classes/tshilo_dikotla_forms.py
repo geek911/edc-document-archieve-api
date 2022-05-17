@@ -29,10 +29,6 @@ class TshiloDikotlaForms:
     @property
     def maternal_crfs(self):
         models = [
-            {
-                'app_label': 'td_maternal',
-                'model_name': 'Clinician Notes',
-            },
         ]
         return models
 
@@ -47,10 +43,7 @@ class TshiloDikotlaForms:
     @property
     def infant_forms(self):
         data = {
-                'crfs': [{
-                    'app_label': 'td_infant',
-                    'model_name': 'Infant Clinician Notes'
-                }],
+                'crfs': [],
                 'non_crfs': self.non_crfs
             }
         return data

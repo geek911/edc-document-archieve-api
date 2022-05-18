@@ -35,6 +35,9 @@ class DocumentArchiveMixin:
     def clinician_notes_image_model(self, app_name=None):
         return django_apps.get_model('%s.cliniciannotesimage' % app_name)
 
+    def child_clinician_notes_image_model(self, app_name=None):
+        return django_apps.get_model('%s.cliniciannotesimage' % app_name)
+
     def clinician_notes_model_cls(self, app_name=None):
         app_config = django_apps.get_app_config(
             'edc_odk').clinician_notes_models
@@ -53,8 +56,33 @@ class DocumentArchiveMixin:
     def flourish_consent_version_cls(self):
         flourish_consent_version_model = 'flourish_caregiver.flourishconsentversion'
         return django_apps.get_model(flourish_consent_version_model)
-    
+
     @property
     def infant_clinician_notes_image_model_cls(self):
         clinician_notes_image_model = 'td_infant.cliniciannotesimage'
         return django_apps.get_model(clinician_notes_image_model)
+
+    @property
+    def assent_image_model_cls(self):
+        assent_image_model = 'edc_odk.assentimage'
+        return django_apps.get_model(assent_image_model)
+
+    @property
+    def adult_main_consent_image_model_cls(self):
+        adult_main_consent_image_model = 'edc_odk.adultmainconsentimage'
+        return django_apps.get_model(adult_main_consent_image_model)
+
+    @property
+    def continued_participation_image_model_cls(self):
+        continued_consent_image_model = 'edc_odk.continuedparticipationimage'
+        return django_apps.get_model(continued_consent_image_model)
+
+    @property
+    def parental_consent_image_model_cls(self):
+        parental_consent_image_model = 'edc_odk.parentalconsentimage'
+        return django_apps.get_model(parental_consent_image_model)
+
+    @property
+    def birth_certificate_image_model_cls(self):
+        birth_certificate_image_model = 'edc_odk.birthcertificateimage'
+        return django_apps.get_model(birth_certificate_image_model)

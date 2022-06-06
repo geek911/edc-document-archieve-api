@@ -197,10 +197,10 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
             os.makedirs(image_path)
         with open('%(path)s%(filename)s' % {'path': image_path, 'filename': f'{filename}.jpeg'}, 'wb') as f:
             f.write(file.read())
-        path = 'media/%(upload_dir)s%(filename)s' % {
-                    'filename': f'{filename}.jpeg',
-                    'upload_dir': upload_to}
-        self.add_image_stamp(path)
+        # path = 'media/%(upload_dir)s%(filename)s' % {
+        #             'filename': f'{filename}.jpeg',
+        #             'upload_dir': upload_to}
+        # self.add_image_stamp(path)
         return True
 
     def get_image_cls(self, model_name, app_name):

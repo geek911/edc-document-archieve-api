@@ -35,7 +35,8 @@ class FlourishForms:
             {
                 'app_label': 'flourish_caregiver',
                 'model_name': 'Clinician Notes',
-            }
+            },
+            
         ]
         return models
 

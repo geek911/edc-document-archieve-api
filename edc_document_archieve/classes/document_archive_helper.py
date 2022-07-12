@@ -10,6 +10,7 @@ from django.utils.timezone import make_aware
 from dateutil.parser import parse
 import PIL
 from PIL import Image
+from datetime import datetime
 
 
 class DocumentArchiveHelper(DocumentArchiveMixin):
@@ -168,7 +169,7 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
 
             if upload_success:
                 datetime_captured = fields.get('date_captured')
-                datetime_captured = parse(datetime_captured)
+                datetime_captured = datetime.strptime(datetime_captured, '%d-%m-%Y %H:%M')
                 local_timezone = pytz.timezone('Africa/Gaborone')
                 datetime_captured.astimezone(local_timezone)
                 # create image model object
@@ -184,7 +185,6 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
                     field_name = 'clinician_notes'
                 if field_name == 'parental_consent_for_child':
                     field_name = 'parental_consent'
-
                 images_cls.objects.create(
                     **{f'{field_name}': obj},
                     image=upload_to + f'{file.name}.jpeg',

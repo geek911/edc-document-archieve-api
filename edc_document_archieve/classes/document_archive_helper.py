@@ -37,10 +37,8 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
             if visit_models:
                 field_name = visit_models[0]
             if visit_obj:
-                child_pids = ['-10', '-25', '-35', '-36',
-                              '-46', '-56', '-60', '-70', '-80']
-                pid_suffix = data_dict.get('subject_identifier')[15:]
-                if pid_suffix in child_pids:
+                pid_suffix = data_dict.get('subject_identifier').split('-')
+                if len(pid_suffix) == 4:
                     consent_model = 'infantdummysubjectconsent' if app_name == 'td_infant' else 'childdummysubjectconsent'
                     consent_version = self.consent_version(
                         app_name=app_name,

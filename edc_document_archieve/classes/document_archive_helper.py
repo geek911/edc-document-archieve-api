@@ -32,13 +32,13 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
                 data_dict['subject_identifier'],
                 data_dict['visit_code'],
                 data_dict['timepoint'])
-            print(visit_obj)
             visit_models = self.get_visit_models().get(app_name)
             field_name = None
             if visit_models:
                 field_name = visit_models[0]
             if visit_obj:
-                if data_dict.get('subject_identifier').endswith('-10'):
+                pid_suffix = data_dict.get('subject_identifier').split('-')
+                if len(pid_suffix) == 4:
                     consent_model = 'infantdummysubjectconsent' if app_name == 'td_infant' else 'childdummysubjectconsent'
                     consent_version = self.consent_version(
                         app_name=app_name,
@@ -197,10 +197,6 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
             os.makedirs(image_path)
         with open('%(path)s%(filename)s' % {'path': image_path, 'filename': f'{filename}.jpeg'}, 'wb') as f:
             f.write(file.read())
-        # path = 'media/%(upload_dir)s%(filename)s' % {
-        #             'filename': f'{filename}.jpeg',
-        #             'upload_dir': upload_to}
-        # self.add_image_stamp(path)
         return True
 
     def get_image_cls(self, model_name, app_name):

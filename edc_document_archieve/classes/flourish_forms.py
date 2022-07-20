@@ -36,7 +36,6 @@ class FlourishForms:
                 'app_label': 'flourish_caregiver',
                 'model_name': 'Clinician Notes',
             },
-            
         ]
         return models
 
@@ -82,6 +81,3 @@ class FlourishForms:
                 ]
             }
         return data
-
-    def create_non_crf_from(self):
-        pass

@@ -36,7 +36,6 @@ class FlourishForms:
                 'app_label': 'flourish_caregiver',
                 'model_name': 'Clinician Notes',
             },
-            
         ]
         return models
 
@@ -53,7 +52,7 @@ class FlourishForms:
         data = {
                 'crfs': [{
                     'app_label': 'flourish_child',
-                    'model_name': 'Child Clinician Notes'
+                    'model_name': 'Infant/Child/Adolescent Clinician Notes'
                 }],
                 'non_crfs': [{
                     'model_name': 'Assent',
@@ -82,6 +81,3 @@ class FlourishForms:
                 ]
             }
         return data
-
-    def create_non_crf_from(self):
-        pass

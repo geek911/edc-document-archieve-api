@@ -26,7 +26,7 @@ class FlourishHelper(FlourishForms):
         caregiver_pids = self.caregiver_consent_cls.objects.values_list(
             'subject_identifier', flat=True).distinct()
 
-        caregiver_child = self.caregiver_child_consent.objects.objects.values_list(
+        caregiver_child = self.caregiver_child_consent.objects.values_list(
             'subject_identifier', flat=True).distinct()
 
         caregiver_pids.extend(caregiver_child)

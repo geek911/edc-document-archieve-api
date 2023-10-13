@@ -35,9 +35,6 @@ class DocumentArchiveMixin:
     def clinician_notes_image_model(self, app_name=None):
         return django_apps.get_model('%s.cliniciannotesimage' % app_name)
 
-    def child_clinician_notes_image_model(self, app_name=None):
-        return django_apps.get_model('%s.cliniciannotesimage' % app_name)
-
     def clinician_notes_model_cls(self, app_name=None):
         app_config = django_apps.get_app_config(
             'edc_odk').clinician_notes_models

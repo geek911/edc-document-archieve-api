@@ -15,20 +15,21 @@ from datetime import datetime
 
 class DocumentArchiveHelper(DocumentArchiveMixin):
     def populate_model_objects(self, data_dict, files):
-        
+
         updated = 0
         count = 0
         model_name = data_dict['model_name'].replace('_', '')
         if model_name == 'parentalconsentforchild':
             model_name = 'parentalconsent'
-        app_name = data_dict['app_label']
+        app_name = 'flourish_facet' if data_dict['visit_code'] == '2600F' else data_dict['app_label']
         img_cls = self.get_image_cls(model_name, app_name)
         image_cls_field = data_dict['model_name']
 
         if 'cliniciannotes' in model_name:
             image_cls_field = 'clinician_notes'
 
-
+        if data_dict['visit_code'] == '2600F':
+            model_name = 'facetcliniciannotes'
 
         model_cls = django_apps.get_model('%s.%s' % (app_name, model_name))
         if data_dict.get('visit_code'):
@@ -128,7 +129,7 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
                 appointment__appt_status=NEW_APPT).order_by('-report_datetime').last()
             if not visit_model_obj:
                 message = (f'Failed to get visit for {subject_identifier}, at '
-                        f'visit {visit_code}. Visit does not exist.')
+                           f'visit {visit_code}. Visit does not exist.')
 
         return visit_model_obj
 
@@ -144,7 +145,8 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
         data_captured = make_aware(data_captured, tz, True)
         if existing_datetime:
             if data_captured > existing_datetime:
-                self.create_image_obj_upload_image(images_cls, field_name, obj, fields, files)
+                self.create_image_obj_upload_image(
+                    images_cls, field_name, obj, fields, files)
                 print(fields.get('date_captured'))
             return True
         else:
@@ -153,7 +155,7 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
     def recent_image_obj_datetime(self, images_cls, field_name, obj, fields, files):
         recent_captured = list()
         related_images = [field.get_accessor_name() for field in
-                            obj._meta.get_fields() if issubclass(type(field), ManyToOneRel)]
+                          obj._meta.get_fields() if issubclass(type(field), ManyToOneRel)]
 
         for related_image in related_images:
             recent_obj = getattr(
@@ -171,12 +173,14 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
         for file in files:
             upload_to = images_cls.image.field.upload_to
             # Check if path is func or string
-            upload_to = upload_to(None, None) if callable(upload_to) else upload_to
+            upload_to = upload_to(None, None) if callable(
+                upload_to) else upload_to
             upload_success = self.image_file_upload(file, file.name, upload_to)
 
             if upload_success:
                 datetime_captured = fields.get('date_captured')
-                datetime_captured = datetime.strptime(datetime_captured, '%d-%m-%Y %H:%M')
+                datetime_captured = datetime.strptime(
+                    datetime_captured, '%d-%m-%Y %H:%M')
                 local_timezone = pytz.timezone('Africa/Gaborone')
                 datetime_captured.astimezone(local_timezone)
                 # create image model object
@@ -233,10 +237,10 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
             return self.parental_consent_image_model_cls
         elif model_name == 'birthcertificate':
             return self.birth_certificate_image_model_cls
-        
+
     def consent_version(self, app_name, consent_model, subject_identifier):
         consent_model_cls = django_apps.get_model(
-                '%s.%s' % (app_name, consent_model))
+            '%s.%s' % (app_name, consent_model))
         version = '1'
         try:
             consent = consent_model_cls.objects.filter(

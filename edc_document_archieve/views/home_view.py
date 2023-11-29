@@ -11,19 +11,20 @@ class HomeView(FlourishHelper, TshiloDikotlaHelper, DocumentArchiveHelper, APIVi
         data = {}
         if study == 'flourish':
             data = {
-                    'pids': self.flourish_pids,
-                    'caregiver_forms': self.caregiver_forms,
-                    'child_forms': self.child_forms,
-                }
+                'pids': self.flourish_pids,
+                'caregiver_forms': self.caregiver_forms,
+                'child_forms': self.child_forms,
+            }
         elif study == 'tshilo dikotla':
             data = {
-                    'pids': self.td_pids,
-                    'caregiver_forms': self.maternal_forms,
-                    'child_forms': self.infant_forms,
-                }
+                'pids': self.td_pids,
+                'caregiver_forms': self.maternal_forms,
+                'child_forms': self.infant_forms,
+            }
         return Response(data)
 
     def post(self, request):
+
         results = request.data
         files = request.FILES.getlist('files')
         count, updated = self.populate_model_objects(results, files)

@@ -21,7 +21,15 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
         model_name = data_dict['model_name'].replace('_', '')
         if model_name == 'parentalconsentforchild':
             model_name = 'parentalconsent'
-        app_name = 'flourish_facet' if data_dict['visit_code'] == '2600F' else data_dict['app_label']
+
+        app_name = None
+
+        if data_dict['visit_code'] == '2600F':
+            app_name = 'flourish_facet'
+        elif data_dict['visit_code'] == '0200':
+            app_name = 'pre_flourish'
+        else:
+            app_name = data_dict['app_label']
         img_cls = self.get_image_cls(model_name, app_name)
         image_cls_field = data_dict['model_name']
 
@@ -30,6 +38,8 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
 
         if data_dict['visit_code'] == '2600F':
             model_name = 'facetcliniciannotes'
+        elif data_dict['visit_code'] == '0200':
+            model_name = 'preflourishcliniciannotes'
 
         model_cls = django_apps.get_model('%s.%s' % (app_name, model_name))
         if data_dict.get('visit_code'):
@@ -52,7 +62,16 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
                         consent_model=consent_model,
                         subject_identifier=data_dict.get('subject_identifier'))
                 else:
-                    consent_model = 'facetconsent' if app_name == 'flourish_facet' else 'subjectconsent'
+
+                    consent_model = None
+
+                    if app_name == 'flourish_facet':
+                        consent_model = 'facetconsent'
+                    elif app_name == 'pre_flourish':
+                        consent_model = 'preflourishconsent'
+                    else:
+                        consent_model = 'subjectconsent'
+
                     consent_version = self.consent_version(
                         app_name=app_name,
                         consent_model=consent_model,

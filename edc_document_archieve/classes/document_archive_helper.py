@@ -56,7 +56,13 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
             if visit_obj:
                 pid_suffix = data_dict.get('subject_identifier').split('-')
                 if len(pid_suffix) == 4:
-                    consent_model = 'infantdummysubjectconsent' if app_name == 'td_infant' else 'childdummysubjectconsent'
+                    consent_model = 'childdummysubjectconsent'
+                    visit_code = data_dict['visit_code']
+
+                    if app_name == "td_infant":
+                        consent_model = 'infantdummysubjectconsent'
+                    elif visit_code == '0200':
+                        consent_model = 'preflourishchilddummysubjectconsent'
                     consent_version = self.consent_version(
                         app_name=app_name,
                         consent_model=consent_model,

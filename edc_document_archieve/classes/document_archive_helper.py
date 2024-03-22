@@ -61,8 +61,11 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
 
                     if app_name == "td_infant":
                         consent_model = 'infantdummysubjectconsent'
+                    elif app_name == 'flourish_facet':
+                        consent_model = 'motherchildconsent'
                     elif visit_code == '0200':
                         consent_model = 'preflourishchilddummysubjectconsent'
+
                     consent_version = self.consent_version(
                         app_name=app_name,
                         consent_model=consent_model,

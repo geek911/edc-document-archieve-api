@@ -155,9 +155,12 @@ class DocumentArchiveHelper(DocumentArchiveMixin):
                 visit_code=visit_code,
                 visit_code_sequence=timepoint).exclude(
                 appointment__appt_status=NEW_APPT).order_by('-report_datetime').last()
+            
             if not visit_model_obj:
                 message = (f'Failed to get visit for {subject_identifier}, at '
                            f'visit {visit_code}. Visit does not exist.')
+                # should throw an internet server error if the visit does not exist
+                raise Exception(message)
 
         return visit_model_obj
 
